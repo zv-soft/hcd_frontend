@@ -5,13 +5,13 @@ export interface RoleWithPagination{
     totalPages: number;
 }
 export interface Role {
-    id: string;
+    id: number;
     name: string;
     description: string;
     permissions: Permission[];
 }
 export interface Permission {
-    id: string;
+    id: number;
     display: string;
     key: string;
     group: string;

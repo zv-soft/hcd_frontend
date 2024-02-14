@@ -17,7 +17,7 @@
         <th>Foto</th>
         <th>Nombre Completo</th>
         <th>Correo</th> 
-        <th>Celular</th> 
+        <!-- <th>Celular</th>    -->
         <th class="d-flex justify-end">Acciones</th>
       </tr>
     </thead>
@@ -32,18 +32,25 @@
           ></v-img></v-avatar>
         </td>
         <td style="white-space: nowrap;">{{ user.fullName }} 
-          <span v-if="isAdmin(user)"><v-chip color="blue">Admin</v-chip></span>
-          <span v-else-if="isSuperAdmin(user)"><v-chip color="red">Super Admin</v-chip></span>
-          <span v-else><v-chip color="green">Empleado</v-chip></span>
+          <span v-if="isAdmin(user) || isSuperAdmin(user)">
+            <v-chip v-if="isAdmin(user)" color="blue">Admin</v-chip>
+            <v-chip v-if="isSuperAdmin(user)" color="red">Super Admin</v-chip>
+          </span>         
+          <span v-else>
+            <span v-for="role in user.roles" :key="role.id">
+              <v-chip color="green">{{ role.name }}</v-chip>
+            </span>
+           
+          </span>
         </td>
           
         <td style="white-space: nowrap;">{{ user.email }}</td>
-        <td style="white-space: nowrap;">{{ user.profile.phone??'-' }}</td>
+        <!-- <td style="white-space: nowrap;">{{ user.profile.phone??'-' }}</td> -->
 
         <td class="d-flex justify-end align-center">
           <v-btn class="mx-1"  @click="()=>{usersStore.updatePopUp=true, itemToEdit=user}" size="35" icon color="#FF9B26"><v-icon color="black">mdi-pen</v-icon></v-btn>  
           <v-btn class="mx-1" v-if=" !isCurrentUser(user)" @click="()=>{itemToRemove=user.id, usersStore.removePopUp=true}" size="35" icon color="#FF9B26"><v-icon color="black">mdi-delete</v-icon></v-btn>  
-          <v-btn class="mx-1"  @click="openProfile(user.id)" size="35" icon color="#FF9B26"><v-icon color="black">mdi-eye</v-icon></v-btn>  
+          <v-btn class="mx-1" disabled @click="openProfile(user.id)" size="35" icon color="#FF9B26"><v-icon color="black">mdi-eye</v-icon></v-btn>  
         </td>
       </tr>
     </tbody>

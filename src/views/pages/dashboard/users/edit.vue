@@ -29,10 +29,25 @@
             v-model="user.password" variant="outlined">
           </v-text-field>
 
+          
+
            <!-- {{ modality  }} -->
           <v-text-field name="password_confirmation" type="password" label="Confirmar Password" class="mb-2" required 
             v-model="user.passwordConfirmation" variant="outlined">
           </v-text-field>
+
+          <v-select
+                v-model="user.roles"
+                :items="rolesStore.getRoles"
+                item-title="name"
+                item-value="id"
+                multiple
+                required
+                outlined
+                variant="outlined"
+              ></v-select>
+
+
             <v-row class="d-flex justify-end">
               <v-btn class="mx-5" @click="() => { userStore.updatePopUp = false }" color="red">Cancelar</v-btn>
               <v-btn type="submit" color="green">Actualizar</v-btn>
@@ -55,11 +70,13 @@
 <script lang="ts" setup>
 import { useUsersStore } from '@/stores/base/users';
 import LoaderComponent from '@/components/loader.vue'
-import { onMounted, ref } from 'vue';
-import type { UserIntrface } from '@/interfaces/users.interface';
+import { onBeforeMount, onMounted, ref } from 'vue';
+import type { UserInterface } from '@/interfaces/users.interface';
 import { useAuthStore } from '@/stores/auth/auth';
 
-const props = defineProps({user:Object as () => UserIntrface})
+import { useRolesStore } from '@/stores/base/roles'
+
+const props = defineProps({user:Object as () => UserInterface})
 
 const loader = ref(false)
 const titleRule = ref([(v: string) => {
@@ -78,6 +95,13 @@ const valid = ref(false)
 const snackbar = ref(false)
 const snackbarMessage = ref('')
 
+const rolesStore = useRolesStore()
+
+onBeforeMount(async () => {
+  await rolesStore.findAll()
+})
+
+
 
 interface updateUser {
     fullName?: string,
@@ -85,6 +109,7 @@ interface updateUser {
     oldPassword?: string,
     password?: string,
     passwordConfirmation?: string,
+    roles?: number[]
 }
 
 const user = ref<updateUser>({
@@ -100,6 +125,7 @@ onMounted(() => {
   setTimeout(() => {
     user.value.fullName = props.user!.fullName
     user.value.email = props.user!.email
+    user.value.roles = props.user!.roles.map((role) => role.id)
     loader.value = false
   }, 1000);
  
@@ -120,6 +146,7 @@ async function create() {
       oldPassword: user.value.oldPassword,
       password: user.value.password,
       passwordConfirmation: user.value.passwordConfirmation,
+      roles: user.value.roles
     }
 
     if(!isCurrentUser(props.user!) || __user.oldPassword == '') delete __user.oldPassword
@@ -171,7 +198,7 @@ async function create() {
   }
 }
 
-function isCurrentUser(user:UserIntrface){
+function isCurrentUser(user:UserInterface){
   return user.id==authStore.user.id
 }
 
