@@ -5,6 +5,8 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import { createPinia } from 'pinia'
 
+
+
 import Toast, { POSITION }  from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";

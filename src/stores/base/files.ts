@@ -1,4 +1,3 @@
-import type { EventInterface, EventsPaginationInterface } from "@/interfaces/events.interface"
 import type { FileInterface } from "@/interfaces/fles.interface"
 import webService from "@/webService"
 import { defineStore } from "pinia"

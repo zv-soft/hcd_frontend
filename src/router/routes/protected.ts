@@ -3,10 +3,14 @@ import DashboardHome from '@/views/pages/dashboard/home.vue'
 import Users from '@/views/pages/dashboard/users/index.vue'
 import User from '@/views/pages/dashboard/users/details.vue'
 import CreateUser from '@/views/pages/dashboard/users/create.vue'
+//Employees
+import Employees from '@/views/pages/dashboard/employees/index.vue'
+import CreateEmployees from '@/views/pages/dashboard/employees/create.vue'
+import DetailAndUpdateEmployee from '@/views/pages/dashboard/employees/edit.vue'
 
 export default{
   path: '/dashboard',
-  name: 'dashbaord',
+  name: 'dashboard',
   component: Layout,
   meta:{
     requireAuth:true
@@ -31,6 +35,22 @@ export default{
       path:'/users/create',
       name:'createUser',
       component:CreateUser,
+    },
+    {
+      path:'/employees',
+      name:'employees',
+      component:Employees,
+    },
+    {
+      path:'/employees/create',
+      name:'createEmployee',
+      component:CreateEmployees,
+    },
+    {
+      path:'/employee/:id',
+      name:'detailsAndUpdateEmployee',
+      component:DetailAndUpdateEmployee,
     }
+
   ]
 }

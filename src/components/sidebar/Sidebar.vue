@@ -30,12 +30,12 @@ const items = [
     path: '/users',
     icon: 'mdi-account-group'
   },
-  // {
-  //   title: 'Eventos y Encuestas',
-  //   value: 'events',
-  //   path: '/events',
-  //   icon: 'mdi-book-plus-multiple-outline'
-  // },
+  {
+    title: 'Empleados',
+    value: 'employees',
+    path: '/employees',
+    icon: 'mdi-badge-account'
+  },
   // {
   //   title: 'Perfiles Profesionales',
   //   value: 'professionalProfile',
@@ -48,12 +48,12 @@ const items = [
   //   path: '/programs',
   //   icon: 'mdi-alpha-p-box-outline'
   // },
-  {
-    title: 'Configuraciones',
-    value: 'configurations',
-    path: '/configurations',
-    icon: 'mdi-cogs'
-  },
+  // {
+  //   title: 'Configuraciones',
+  //   value: 'configurations',
+  //   path: '/configurations',
+  //   icon: 'mdi-cogs'
+  // },
 
 ]
 </script>
