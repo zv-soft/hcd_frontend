@@ -7,7 +7,7 @@
         <v-row>
           <v-card color="white" width="500" class="pa-10">
 
-            <h2>Ingresar a Uniandes</h2>
+            <h2>Ingresar a HCD Dashboard</h2>
             <v-col cols="12">
               <v-label>Email</v-label>
               <v-text-field :disabled="loader" name="email" label="email" placeholder="admin@example.com2" variant="outlined"
