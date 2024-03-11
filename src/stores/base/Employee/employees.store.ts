@@ -143,6 +143,41 @@ export const useEmployeeStore = defineStore('employee', {
       }
     },
 
+    async createAdjustment(id:number, adjustment:any): Promise<boolean>{
+      try
+      {
+        const params = {
+          employeeId:id,
+          ...adjustment
+        }
+        const response =  await webService.post(`${baseEndpoint}/ordinance-adjustments`,params, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+
+        if(response.status == 201)
+        { 
+          this.toast.success(response.data.message)
+          this.employee = await this.findOne(id)
+          return true
+        }
+        else 
+        {
+        
+          return false
+        }
+      }
+      catch(err:any)
+      {
+        this.toast.error(err.response.data.message)
+        return false
+      }
+    },
+
     async update(id:number, user:any): Promise<boolean>{
       try
       {

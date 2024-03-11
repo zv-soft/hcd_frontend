@@ -10,10 +10,6 @@
             <v-btn icon="mdi-plus" @click="newFamilyPeople = true" color="primary"></v-btn>
         </v-row>
 
-
-
-
-
         <v-dialog v-model="newFamilyPeople" width="800">
             <v-card class="pa-10">
 
@@ -56,9 +52,10 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-select v-if="newFamily.relationship!='spouse'" v-model="newFamily.scholarships" label="Select" :items="scholarships"
-                                item-title="value" item-value="key" :rules="validations.titleRule('Relacion')"
-                                density="compact" variant="outlined"></v-select>
+                            <v-select v-if="newFamily.relationship != 'spouse'" v-model="newFamily.scholarships"
+                                label="Select" :items="scholarships" item-title="value" item-value="key"
+                                :rules="validations.titleRule('Relacion')" density="compact"
+                                variant="outlined"></v-select>
                         </v-col>
 
                         <v-col cols="6">
@@ -86,19 +83,21 @@
 
 
             <template v-slot:item.actions="{ item }">
-                <v-btn icon density="compact" color="green-lighten-1" class="mr-2"><v-icon size="15">mdi-pen</v-icon></v-btn>
-                <v-btn icon density="compact" color="red-lighten-1"><v-icon size="15" @Click="()=>{deleteDialogStore.openDialog(item.id, 'Familiar')}">mdi-trash-can</v-icon></v-btn>
+                <v-btn icon density="compact" color="green-lighten-1" class="mr-2"><v-icon
+                        size="15">mdi-pen</v-icon></v-btn>
+                <v-btn icon density="compact" color="red-lighten-1"><v-icon size="15"
+                        @Click="() => { deleteDialogStore.openDialog(item.id, 'Familiar') }">mdi-trash-can</v-icon></v-btn>
             </template>
 
             <template v-slot:item.disability="{ item }">
 
                 <v-chip v-if="item.disability" size="x-small" color="green">Discapacidad</v-chip>
 
-                <v-chip v-if="item.underLegalCustody"  size="x-small"color="green" >Guarda Legal</v-chip>
-          
+                <v-chip v-if="item.underLegalCustody" size="x-small" color="green">Guarda Legal</v-chip>
+
             </template>
 
-      
+
 
         </v-data-table>
         <v-row class="d-flex justify-end">
@@ -142,10 +141,12 @@ const headers = [
         key: 'fullName',
         value: item => `${item.name} ${item.lastName}`,
     },
-    {   title: 'Relacion', 
-        key: 'relationship', 
-        value: item => `${relationshipsList.find(relationship => relationship.key === item.relationship)?.value}`},
-    { title: 'Fecha de nacimiento', key: 'dob'},
+    {
+        title: 'Relacion',
+        key: 'relationship',
+        value: item => `${relationshipsList.find(relationship => relationship.key === item.relationship)?.value}`
+    },
+    { title: 'Fecha de nacimiento', key: 'dob' },
     { title: 'DNI', key: 'dni' },
     { title: 'Condiciones', key: 'disability' },
     { title: 'Acciones', key: 'actions' },
@@ -166,18 +167,17 @@ const closeModal = () => {
 
 
 const create = async () => {
-    if(newFamily.value.relationship=='spouse')
-    {
+    if (newFamily.value.relationship == 'spouse') {
         delete newFamily.value.scholarships
     }
-    
+
     if (valid.value === true) {
         const response = await employeeStore.createFamily(employeeStore.employee.id, newFamily.value)
         if (response) {
             newFamilyPeople.value = false
             cleanForm()
         }
-    
+
     }
 }
 

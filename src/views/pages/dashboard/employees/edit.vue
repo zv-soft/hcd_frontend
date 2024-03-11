@@ -188,13 +188,17 @@
       <v-row>
         <v-divider class="my-2"></v-divider>
         <v-btn class="ma-5" variant="outlined" @Click="()=>{familyGroupPopUp=true}" prepend-icon="mdi-human-male-female-child" color="primary">Grupo Familiar</v-btn>
-        <v-btn class="ma-5" variant="outlined" prepend-icon="mdi-draw-pen" color="primary">Ajustes por Ordenanzas</v-btn>
+        <v-btn class="ma-5" variant="outlined" @Click="()=>{ordinanceAdjustmentsPopUp=true}" prepend-icon="mdi-draw-pen" color="primary">Ajustes por Ordenanzas</v-btn>
       </v-row>
  
     </v-card>
 
     <v-dialog persistent v-model="familyGroupPopUp" width="800">
       <FamilyGroup :employee="currentEmployee" @close="familyGroupPopUp=false"></FamilyGroup>
+    </v-dialog>
+
+    <v-dialog persistent v-model="ordinanceAdjustmentsPopUp" width="800">
+      <ordinanceAdjustments @close="ordinanceAdjustmentsPopUp=false"></ordinanceAdjustments>
     </v-dialog>
   
   
@@ -207,6 +211,7 @@
   import { ref, onBeforeMount, onMounted } from 'vue';
 
   import FamilyGroup from './modals/familyGroup.vue'
+  import ordinanceAdjustments from './modals/ordinanceAdjustments.vue';
   
   import *  as validations from './helpers/validations';
   
@@ -227,6 +232,7 @@
   const plant = ref()
 
   const familyGroupPopUp = ref(false)
+  const ordinanceAdjustmentsPopUp = ref(false)
 
   const currentEmployee = ref({} as EmployeeInterface)
   
@@ -274,7 +280,7 @@
         category: __employee.category.id,
         studies: __employee.studies.id,
         seniority: __employee.seniority.toString(),
-        basicSalary: __employee.basicSalary.toString(),
+        basicSalary: +__employee.basicSalary,
         cbu: __employee.cbu,
     }
     }, 1000);
