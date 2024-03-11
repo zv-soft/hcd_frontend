@@ -1,13 +1,15 @@
 import type { AuthInterface } from "@/interfaces/user.interface"
 import webService from "@/webService"
 import { defineStore } from "pinia"
+import { useToast } from "vue-toastification"
 
 
 export const useAuthStore = defineStore('auth', {
   
   state: ()=>({
     user:{} as AuthInterface,
-    token:null
+    token:null,
+    toast: useToast()
   }),
   getters: {
     getUser: (state) => {
@@ -37,6 +39,7 @@ export const useAuthStore = defineStore('auth', {
           this.token = res.data.token         
           localStorage.setItem('user', JSON.stringify(res.data))  
           this.user = res.data  
+          this.toast.success(`Bienvenido ${res.data.fullName}`)
           return true
         }
         else return false
