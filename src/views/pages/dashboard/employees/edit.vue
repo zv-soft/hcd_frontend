@@ -280,7 +280,7 @@
         category: __employee.category.id,
         studies: __employee.studies.id,
         seniority: __employee.seniority.toString(),
-        basicSalary: +__employee.basicSalary,
+        basicSalary: 150.00.toFixed(2),
         cbu: __employee.cbu,
     }
     }, 1000);

@@ -89,7 +89,7 @@ const headers = [
 
 const newOrdinanceAdjustment = ref({
     name: '',
-    amount: 0,
+    amount: '',
     action: ''
 })
 
@@ -112,7 +112,7 @@ const create = async() => {
 const cleanForm = () => {
     newOrdinanceAdjustment.value = {
         name: '',
-        amount: 0,
+        amount: '',
         action: ''
     }
 }

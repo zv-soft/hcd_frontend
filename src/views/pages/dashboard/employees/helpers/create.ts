@@ -13,7 +13,7 @@ export const newEmployee =ref({
     employeeRecord:'',
     category:0,
     functionEmployee:'',
-    basicSalary:0,
+    basicSalary:'',
     seniority:'',
     startDate:'',
     startDateCategory:'',

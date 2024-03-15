@@ -68,7 +68,7 @@
 
         <!-- DOB -->
         <v-col cols="12" md="6">
-          <v-text-field name="dob" prepend-inner-icon="mdi-calendar" placeholder="1991/01/01"
+          <v-text-field name="dob" prepend-inner-icon="mdi-calendar" placeholder="1991-01-01"
             label="Fecha de nacimiento" class="mb-2" required :rules="validations.dobRule()" v-model="employee.dob"
             variant="outlined">
           </v-text-field>
@@ -104,7 +104,7 @@
 
         <!-- Start Date -->
         <v-col cols="12" md="4">
-          <v-text-field name="startDate" prepend-inner-icon="mdi-calendar" placeholder="1991/01/01"
+          <v-text-field name="startDate" prepend-inner-icon="mdi-calendar" placeholder="1991-01-01"
             label="Fecha de ingreso" class="mb-2" required :rules="validations.dateRule('Fecha de ingreso')"
             v-model="employee.startDate" variant="outlined">
           </v-text-field>
@@ -112,7 +112,7 @@
 
         <!-- Start Date -->
         <v-col cols="12" md="4">
-          <v-text-field name="startDateCategory" placeholder="1991/01/01" prepend-inner-icon="mdi-calendar"
+          <v-text-field name="startDateCategory" placeholder="1991-01-01" prepend-inner-icon="mdi-calendar"
             label="Fecha de ingreso en la categoria actual" class="mb-2" required
             :rules="validations.dateRule('Fecha de ingreso en la categoria actual')"
             v-model="employee.startDateCategory" variant="outlined">
