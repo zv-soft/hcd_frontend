@@ -85,8 +85,9 @@
             <template v-slot:item.actions="{ item }">
                 <v-btn icon density="compact" color="green-lighten-1" class="mr-2"><v-icon
                         size="15">mdi-pen</v-icon></v-btn>
-                <v-btn icon density="compact" color="red-lighten-1"><v-icon size="15"
-                        @Click="() => { deleteDialogStore.openDialog(item.id, 'Familiar') }">mdi-trash-can</v-icon></v-btn>
+                <v-btn icon density="compact" color="red-lighten-1"
+                    @Click="() => { deleteDialogStore.openDialog(item.id, 'Familiar') }"><v-icon
+                        size="15">mdi-trash-can</v-icon></v-btn>
             </template>
 
             <template v-slot:item.disability="{ item }">

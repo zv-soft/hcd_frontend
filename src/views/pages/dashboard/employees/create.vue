@@ -183,7 +183,10 @@
 
 
       <v-row class="d-flex justify-end">
-        <v-btn class="mx-5" @click="() => { userStore.createPopUp = false }" color="red">Cancelar</v-btn>
+        <router-link to="/employees">
+          <v-btn class="mx-5"  color="red">Cancelar</v-btn>
+        </router-link>
+        
         <v-btn type="submit" color="green">Crear</v-btn>
       </v-row>
     </v-form>
@@ -230,7 +233,35 @@ const employeeStore = useEmployeeStore()
 onBeforeMount(async () => {
   await configStore.findAllPlant()
   await configStore.findAllStudies()
+  cleanForm()
 })
+
+const cleanForm = () => {
+  newEmployee.value.name = null
+  newEmployee.value.lastName = null
+  newEmployee.value.address = null
+  newEmployee.value.dni = null
+  newEmployee.value.cuil = null
+  newEmployee.value.phoneNumber = null
+  newEmployee.value.email = null
+  newEmployee.value.dob = null
+  newEmployee.value.employeeRecord = null
+  newEmployee.value.functionEmployee = null
+  newEmployee.value.studies = 0
+  newEmployee.value.seniority = null
+  newEmployee.value.startDate = null
+  newEmployee.value.startDateCategory = null
+  newEmployee.value.category = 0
+  newEmployee.value.mudon = false
+  newEmployee.value.upcn = false
+  newEmployee.value.muoem = false
+  newEmployee.value.politicalContribution = false
+  newEmployee.value.affiliationUoem = false
+  newEmployee.value.remunerative = false
+  newEmployee.value.basicSalary = null
+  newEmployee.value.bank = null
+  newEmployee.value.cbu = null
+}
 
 async function create() {
   console.log(employee.value)

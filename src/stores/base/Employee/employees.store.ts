@@ -260,7 +260,38 @@ export const useEmployeeStore = defineStore('employee', {
       {
         return false
       }
-    }   
+    },
+
+    async removeAdjustment(id:number): Promise<boolean>{
+      try
+      {
+        const response =  await webService.delete(`employee/ordinance-adjustments/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+
+        if(response.status == 200)
+        { 
+          this.toast.success(response.data.message)
+          this.employee = await this.findOne(this.employee.id)
+         return true
+        }
+        else 
+        {
+          return false
+        }
+      }
+      catch(err)
+      {
+        return false
+      }
+    },
+    
+    
   
   
   },
