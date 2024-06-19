@@ -70,8 +70,14 @@
 
 
                     <v-row class="d-flex justify-end">
-                        <v-btn class="mx-5" @click="newFamilyPeople = false" color="red">Cancelar</v-btn>
-                        <v-btn type="submit" color="green">Crear</v-btn>
+                        <v-btn 
+                            class="mx-5" 
+                            @click="cleanForm" 
+                            color="red">Cancelar</v-btn>
+                        <v-btn type="submit" color="green">
+                            <span v-if="toEdit">Actualizar</span>
+                            <span v-else>Crear</span>
+                        </v-btn>
                     </v-row>
                 </v-form>
 
@@ -83,8 +89,17 @@
 
 
             <template v-slot:item.actions="{ item }">
-                <v-btn icon density="compact" color="green-lighten-1" class="mr-2"><v-icon
-                        size="15">mdi-pen</v-icon></v-btn>
+                <v-btn 
+                    @click="editFamily(item)"
+                    icon 
+                    density="compact" 
+                    color="green-lighten-1" 
+                    class="mr-2">
+                    <v-icon
+                        size="15">
+                        mdi-pen
+                    </v-icon>
+                </v-btn>
                 <v-btn icon density="compact" color="red-lighten-1"
                     @Click="() => { deleteDialogStore.openDialog(item.id, 'Familiar') }"><v-icon
                         size="15">mdi-trash-can</v-icon></v-btn>
@@ -126,6 +141,7 @@ const employeeStore = useEmployeeStore()
 const deleteDialogStore = useDeleteDialog()
 
 const newFamily = ref({
+    id: 0,
     name: '',
     lastName: '',
     relationship: null,
@@ -133,8 +149,11 @@ const newFamily = ref({
     dni: '',
     scholarships: null,
     disability: false,
-    underLegalCustody: false
+    underLegalCustody: false,
+    employeeId: employeeStore.employee.id
 })
+
+const toEdit = ref(false)
 
 const headers = [
     {
@@ -166,24 +185,17 @@ const closeModal = () => {
     emit('close')
 }
 
+const editFamily = (data)=>{
+    newFamily.value = data
+    newFamily.value.employeeId = employeeStore.employee.id
 
-const create = async () => {
-    if (newFamily.value.relationship == 'spouse') {
-        delete newFamily.value.scholarships
-    }
-
-    if (valid.value === true) {
-        const response = await employeeStore.createFamily(employeeStore.employee.id, newFamily.value)
-        if (response) {
-            newFamilyPeople.value = false
-            cleanForm()
-        }
-
-    }
+    toEdit.value = true
+    newFamilyPeople.value = true
 }
-
 const cleanForm = () => {
+    newFamilyPeople.value = false,
     newFamily.value = {
+        id: 0,
         name: '',
         lastName: '',
         relationship: null,
@@ -191,7 +203,37 @@ const cleanForm = () => {
         dni: '',
         scholarships: null,
         disability: false,
-        underLegalCustody: false
+        underLegalCustody: false,
+        employeeId: employeeStore.employee.id
+    }
+}
+
+
+const create = async () => {
+    if (newFamily.value.relationship == 'spouse') {
+        delete newFamily.value.scholarships
+    }
+
+    if (valid.value === true) {
+        let response = null
+        if(toEdit.value)
+        {
+            
+            const {id, ...data } = newFamily.value
+          
+            response = await employeeStore.updateFamily(id, data)
+        }
+        else
+        {
+            delete newFamily.value.id
+            response = await employeeStore.createFamily(employeeStore.employee.id, newFamily.value)
+        }
+        
+        if (response) {
+            newFamilyPeople.value = false
+            cleanForm()
+        }
+
     }
 }
 

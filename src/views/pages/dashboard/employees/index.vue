@@ -19,7 +19,7 @@
           <th>Nombre Completo</th>
           <th>Correo</th> 
           <th>Celular</th>   
-          <th>Direccion</th>   
+ 
           <th>Funcion</th>
           <th>Familiares</th>
           <th class="d-flex justify-end">Acciones</th>
@@ -42,7 +42,7 @@
             
           <td style="white-space: nowrap;">{{ user.email }}</td>
           <td style="white-space: nowrap;">{{ user.phoneNumber??'-' }}</td>
-          <td style="white-space: nowrap;">{{ user.address??'-' }}</td>
+         
           <td style="white-space: nowrap;">
             <v-chip color="green"> {{ user.function??'-' }}</v-chip>
           </td>

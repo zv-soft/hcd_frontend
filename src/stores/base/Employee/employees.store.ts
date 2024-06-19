@@ -111,11 +111,42 @@ export const useEmployeeStore = defineStore('employee', {
     async createFamily(id:number, family:any): Promise<boolean>{
       try
       {
-        const params = {
-          employeeId:id,
-          ...family
+        // const params = {
+        //   employeeId:id,
+        //   ...family
+        // }
+        const response =  await webService.post(`${baseEndpoint}/family`,family, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+
+        if(response.status == 201)
+        { 
+          this.toast.success(response.data.message)
+          this.employee = await this.findOne(id)
+          return true
         }
-        const response =  await webService.post(`${baseEndpoint}/family`,params, {
+        else 
+        {
+        
+          return false
+        }
+      }
+      catch(err:any)
+      {
+        this.toast.error(err.response.data.message)
+        return false
+      }
+    },
+
+    async updateFamily(id:number, family:any): Promise<boolean>{
+      try
+      {
+        const response =  await webService.patch(`${baseEndpoint}/family/${id}`, family, {
           headers: {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
