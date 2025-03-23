@@ -273,10 +273,11 @@
 
     plant.value = __employee.category.plant.id,
 
+
+
     setTimeout(() => {
         employee.value = {
         ...__employee,
-        functionEmployee: __employee.function,
         category: __employee.category.id,
         studies: __employee.studies.id,
         seniority: __employee.seniority.toString(),
@@ -293,7 +294,9 @@
     console.log(employee.value)
     if (valid.value === true) {
       loader.value = true
-      const res = await employeeStore.create(employee.value)
+
+      const { familyGroups, ordinanceAdjustments, id, ...employeeToUpdate } = employee.value
+      const res = await employeeStore.update(id, employeeToUpdate)
       console.log(res)
       if (res) {
         await userStore.findAll(1)

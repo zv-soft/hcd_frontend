@@ -44,7 +44,7 @@
           <td style="white-space: nowrap;">{{ user.phoneNumber??'-' }}</td>
          
           <td style="white-space: nowrap;">
-            <v-chip color="green"> {{ user.function??'-' }}</v-chip>
+            <v-chip color="green"> {{ user.functionEmployee??'-' }}</v-chip>
           </td>
           <td style="white-space: nowrap;"><v-chip color="blue"> {{ user.familyGroups.length??0 }}</v-chip></td>
           <td class="d-flex justify-end align-center">
@@ -148,7 +148,7 @@ import { useDeleteDialog } from '@/stores/helpers/deleteDialog';
 
   async function getUsers(__page:number){
     loader.value=true
-    await employeeStore.findAll(__page, 10)
+    await employeeStore.findAllWithPagination(__page, 10)
     loader.value=false
     
   }
@@ -157,7 +157,7 @@ import { useDeleteDialog } from '@/stores/helpers/deleteDialog';
     loader.value=true
     await employeeStore.remove(__id)
     employeeStore.removePopUp=false
-    await employeeStore.findAll(page, 10)
+    await employeeStore.findAllWithPagination(page, 10)
     loader.value=false
   }
   

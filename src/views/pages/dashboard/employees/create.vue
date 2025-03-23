@@ -267,7 +267,10 @@ async function create() {
   console.log(employee.value)
   if (valid.value === true) {
     loader.value = true
-    const res = await employeeStore.create(employee.value)
+
+    const {id, familyGroups, ordinanceAdjustments, ...rest} = employee.value
+
+    const res = await employeeStore.create(rest)
     console.log(res)
     if (res) {
       await userStore.findAll(1)

@@ -7,6 +7,9 @@ import CreateUser from '@/views/pages/dashboard/users/create.vue'
 import Employees from '@/views/pages/dashboard/employees/index.vue'
 import CreateEmployees from '@/views/pages/dashboard/employees/create.vue'
 import DetailAndUpdateEmployee from '@/views/pages/dashboard/employees/edit.vue'
+//Receipts
+import Receipts from '@/views/pages/dashboard/receipts/receiptList.vue'
+
 
 export default{
   path: '/dashboard',
@@ -50,6 +53,11 @@ export default{
       path:'/employee/:id',
       name:'detailsAndUpdateEmployee',
       component:DetailAndUpdateEmployee,
+    },
+    {
+      path:'/receipts',
+      name:'receiptList',
+      component:Receipts,
     }
 
   ]

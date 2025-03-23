@@ -2,14 +2,17 @@ import type { UserInterface, UsersPaginationsInterface } from "@/interfaces/user
 import webService from "@/webService"
 import { defineStore } from "pinia"
 import { useToast } from "vue-toastification";
-import type { EmployeeInterface, EmployeesInterface, EmployeesWithPaginationInterface } from "./employee.interface";
+import type { EmployeeInterface, EmployeeReceiptInterface, EmployeesInterface, EmployeesWithPaginationInterface, ReceiptListInterface } from "./employee.interface";
+
 
 const baseEndpoint = 'employee'
 
 export const useEmployeeStore = defineStore('employee', {
   state: ()=>({
     employees:{} as EmployeesWithPaginationInterface,
+    employeesList: [] as EmployeeInterface[],
     employee:{} as EmployeeInterface,
+    receiptList: [] as ReceiptListInterface[],
     createPopUp:false,
     updatePopUp:false,
     removePopUp:false,
@@ -19,7 +22,8 @@ export const useEmployeeStore = defineStore('employee', {
     getAll: (state) => state.employees
   },
   actions: {
-    async findAll(page:number, take:number = 10): Promise<boolean>{
+
+    async findAllWithPagination(page:number, take:number = 10): Promise<boolean>{
       try
       {   
         const response =  await webService.get(`${baseEndpoint}?page=${page}&take=${take}`,{
@@ -34,6 +38,34 @@ export const useEmployeeStore = defineStore('employee', {
         if(response)
         {
           this.employees = response.data
+          return true
+        }
+        else 
+        {
+          return false
+        }
+      }
+      catch(err)
+      {
+        return false
+      }
+    
+    },
+    async findAll(): Promise<boolean>{
+      try
+      {   
+        const response =  await webService.get(`${baseEndpoint}`,{
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+
+        if(response)
+        {
+          this.employeesList = response.data
           return true
         }
         else 
@@ -77,6 +109,40 @@ export const useEmployeeStore = defineStore('employee', {
     
     },
 
+    async findOneReceiptByID(id:number, month:string, year:string): Promise<null|EmployeeReceiptInterface>{
+      try
+      {
+        const response =  await webService.get(`${baseEndpoint}/receipt/${id}/${month}/${year}`,{
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+
+        if(response.status == 200)
+        { 
+     
+         return response.data
+        }
+        else 
+        {
+          return null
+        }
+      }
+      catch(err)
+      {
+        return null
+      }
+    
+    },
+
+
+
+
+
+
     async create(user:any): Promise<boolean>{
       try
       {
@@ -108,14 +174,14 @@ export const useEmployeeStore = defineStore('employee', {
     
     },
 
-    async createFamily(id:number, family:any): Promise<boolean>{
+    async createFamily(id:number, family:FormData): Promise<boolean>{
       try
       {
         // const params = {
         //   employeeId:id,
         //   ...family
         // }
-        const response =  await webService.post(`${baseEndpoint}/family`,family, {
+        const response =  await webService.post(`${baseEndpoint}/family`, family, {
           headers: {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
@@ -209,10 +275,10 @@ export const useEmployeeStore = defineStore('employee', {
       }
     },
 
-    async update(id:number, user:any): Promise<boolean>{
+    async update(id:number, employee:any): Promise<boolean>{
       try
       {
-        const users =  await webService.patch(`user/${id}`,user, {
+        const users =  await webService.patch(`${baseEndpoint}/${id}`, employee, {
           headers: {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
@@ -321,7 +387,77 @@ export const useEmployeeStore = defineStore('employee', {
         return false
       }
     },
+
+
+    async uploadReceipts(params:FormData): Promise<boolean>{
+      
+
+      console.log(params['file'])
+        try
+        {
+          const response =  await webService.post(`${baseEndpoint}/upload-salary-receipt`, params, {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              Accept: "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            }
+          })
+  
+          if(response.status == 201)
+          { 
+            this.toast.success(response.data.message)
+            return true
+          }
+          else 
+          {
+          
+            return false
+          }
+        }
+        catch(err:any)
+        {
+          this.toast.error(err.response.data.message)
+          return false
+        }
+
+      return true
+    },
     
+
+
+    async getReceiptsList(page:number=1, skype:number=10): Promise<boolean>{
+
+      try{
+
+      const response =  await webService.get(`${baseEndpoint}/receipt`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+
+
+      console.log(response)
+
+      if(response.status == 200)
+      { 
+   
+        this.receiptList = response.data
+       return true
+      }
+      else 
+      {
+        return false
+      }
+    }
+    catch(err)
+    {
+      return false
+    }
+
+    }
     
   
   

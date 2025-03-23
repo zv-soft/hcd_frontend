@@ -21,7 +21,7 @@ export interface EmployeeInterface {
   cuil: string
   phoneNumber: string
   employeeRecord: string
-  function: string
+  functionEmployee: string
   basicSalary: string
   seniority: number
   startDate: string
@@ -58,4 +58,53 @@ export interface Plant {
   id: number
   name: string
   status: boolean
+}
+
+export interface EmployeeReceiptInterface {
+  employee: EmployeeReceipt
+  legajo: string
+  basicSalary: string
+  period: string
+  bank: string
+  cbu: string
+  totalString:string
+  details: ReceiptDetail[]
+}
+
+interface EmployeeReceipt {
+  fullName: string
+  cuit: string
+  category: string
+  employeeFunction: string
+  startDate: string
+}
+
+export interface ReceiptDetail {
+  name: string
+  type: string
+  value: string
+  qty?: string
+  unit?: string
+}
+
+
+export interface ReceiptListInterface {
+  employeeRecord: string;
+  fullName: string;
+  year: number;
+  month: number;
+  basicSalary: number;
+  totalSalary: number;
+}
+
+
+export const RECEIPT_ITEMS_TYPES = {
+  positive: 'positivo',
+  negative: 'negativo',
+  additional: 'adicionales',
+  total: 'total',
+  rounded: 'redondeo',
+  totalCobrar: 'totalCobrar',
+  totalPositive: 'totalPositivo',
+  totalNegative: 'totalNegativo',
 }

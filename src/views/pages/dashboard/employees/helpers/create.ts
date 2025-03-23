@@ -1,6 +1,8 @@
 import { ref } from "vue";
+import FamilyGroup from "../modals/familyGroup.vue";
 
 export const newEmployee =ref({
+    id:0,
     name:'',
     lastName:'',
     address:'',
@@ -25,4 +27,6 @@ export const newEmployee =ref({
     politicalContribution:false,
     affiliationUoem:false,
     remunerative:false,
+    familyGroups: [],
+    ordinanceAdjustments: []
 })

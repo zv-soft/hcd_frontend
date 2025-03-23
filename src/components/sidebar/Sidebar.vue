@@ -36,12 +36,12 @@ const items = [
     path: '/employees',
     icon: 'mdi-badge-account'
   },
-  // {
-  //   title: 'Perfiles Profesionales',
-  //   value: 'professionalProfile',
-  //   path: '/professionalProfile',
-  //   icon: 'mdi-format-list-text'
-  // },
+  {
+    title: 'Recibos de Sueldo',
+    value: 'receipts',
+    path: '/receipts',
+    icon: 'mdi-receipt-text'
+  },
   // {
   //   title: 'Programas',
   //   value: 'programs',
