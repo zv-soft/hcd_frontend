@@ -43,7 +43,7 @@ import { useEmployeeStore } from '@/stores/base/Employee/employees.store';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import logo from '@/assets/escudo_RDLS.png'
+import logo from '@/assets/escudo_rdls.png'
 
 import content from './content.vue';
 
