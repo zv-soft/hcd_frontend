@@ -18,8 +18,9 @@
               item-title="name"
               item-value="employeeRecord"
               v-model="employeeId"
-              :items="employeesList" >
-              </v-select>
+              :items="employeesList"
+            >
+            </v-select>
           </v-col>
           <v-col>
             <v-select
@@ -41,11 +42,27 @@
             ></v-combobox>
           </v-col>
           <v-col cols="12" md="3" class="d-flex justify-center">
-            <v-btn color="primary" @click="()=>{viewReceipt(employeeId, monthForView, yearForView)}">Ver Recibo</v-btn>
-            <v-btn class="mx-2" color="primary" @click="()=>{viewReceipt(employeeId, monthForView, yearForView, true)}"><v-icon>mdi-printer</v-icon></v-btn>
+            <v-btn
+              color="primary"
+              @click="
+                () => {
+                  viewReceipt(employeeId, monthForView, yearForView)
+                }
+              "
+              >Ver Recibo</v-btn
+            >
+            <v-btn
+              class="mx-2"
+              color="primary"
+              @click="
+                () => {
+                  viewReceipt(employeeId, monthForView, yearForView, true)
+                }
+              "
+              ><v-icon>mdi-printer</v-icon></v-btn
+            >
           </v-col>
         </v-row>
-       
       </v-form>
     </v-card>
 
@@ -64,12 +81,7 @@
             ></v-select>
           </v-col>
           <v-col cols="12" md="3">
-            <v-combobox
-              v-model="year"
-              :items="years()"
-              label="Año"
-              variant="outlined"
-            ></v-combobox>
+            <v-combobox v-model="year" :items="years()" label="Año" variant="outlined"></v-combobox>
           </v-col>
           <v-col cols="12" md="6">
             <v-file-input
@@ -82,62 +94,121 @@
           </v-col>
         </v-row>
         <v-row class="d-flex justify-end">
-       
-            <v-btn color="primary" @click="uploadReceipts()">Cargar Recibos</v-btn>
-          
+          <v-btn color="primary" @click="uploadReceipts()">Cargar Recibos</v-btn>
         </v-row>
-        
       </v-form>
     </v-card>
 
-
     <v-card class="mt-5 pa-10">
-      <v-data-table
-        :headers="headers"
-        :items="employeeStore.receiptList"
-        class="elevation-1"
-      >
-    
-        <template v-slot:item.actions="{ item }">
-          <v-btn class="mx-1" color="primary" @click="()=>{viewReceipt(item.employeeRecord, item.month, item.year, false)}">Ver</v-btn>
-          <v-btn class="mx-1" color="primary" @click="()=>{viewReceipt(item.employeeRecord, item.month, item.year,true)}"><v-icon>mdi-printer</v-icon></v-btn>
+      <v-card-title>Lista de recibos</v-card-title>
+      <v-row>
+        <v-col class="d-flex justify-end">
+          <v-btn  color="secondary" @click="hidenAmounts = !hidenAmounts">
+            {{  !hidenAmounts?`Olcultar Valores`:`Mostras Valores Ocultos` }}  
+            <v-icon class="mx-2" color="white" icon="mdi-eye">mdi-eye</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+
+
+
+      <template v-slot:text>
+      <v-text-field
+        v-model="search"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        hide-details
+        single-line
+      ></v-text-field>
+    </template>
+
+
+      <v-data-table :headers="headers" :items="employeeStore.receiptList"  :search="search" class="elevation-1">
+        <template v-slot:item.period="{ item }">
+          <v-chip color="primary">
+            {{ createPeriod(item.month, item.year) }}
+          </v-chip>
         </template>
-    
-    </v-data-table>
+
+        <template v-slot:item.fullName="{ item }">
+          <strong>{{ item.fullName }}</strong>
+        </template>
+
+        <template v-slot:item.basicSalary="{ item }">
+          {{ hidenAmounts?'******':formatCurrency(item.basicSalary) }}
+        </template>
+        <template v-slot:item.totalSalary="{ item }">
+          {{ hidenAmounts?'******':formatCurrency(item.totalSalary) }}
+        </template>
+
+        <template v-slot:item.employeeRecord="{ item }">
+          <v-chip color="primary">
+            {{ item.employeeRecord }}
+          </v-chip>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-btn
+            class="mx-1"
+            color="primary"
+            @click="
+              () => {
+                viewReceipt(item.employeeRecord, item.month, item.year, false)
+              }
+            "
+            >Ver</v-btn
+          >
+          <v-btn
+            class="mx-1"
+            color="primary"
+            @click="
+              () => {
+                viewReceipt(item.employeeRecord, item.month, item.year, true)
+              }
+            "
+            ><v-icon>mdi-printer</v-icon></v-btn
+          >
+        </template>
+      </v-data-table>
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
-
 //Importations
 import { ref, onBeforeMount } from 'vue'
 import loaderComponent from '@/components/loader.vue'
-
 import { useEmployeeStore } from '@/stores/base/Employee/employees.store'
-import { EmployeeInterface, EmployeesWithPaginationInterface, ReceiptListInterface } from '@/stores/base/Employee/employee.interface';
-import { useRoute, useRouter } from 'vue-router';
+import { EmployeeInterface, ReceiptListInterface } from '@/stores/base/Employee/employee.interface'
+import { useRoute, useRouter } from 'vue-router'
+import { formatCurrency } from '@/components/helpers/helpers'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
 //Variables
 let loader = ref(false)
-const file = ref<File | null>(null);
+const file = ref<File | null>(null)
 const month = ref('')
 const year = ref('')
 const employeeStore = useEmployeeStore()
 const employeesList = ref([] as EmployeeInterface[])
-
+const search = ref('')
 const receiptsList = ref([] as ReceiptListInterface[])
+const hidenAmounts = ref(true)
 
 const headers = [
-  { title: 'Nombre', key: 'fullName', sortable: true },
+  { title: 'Nombre', key: 'fullName', sortable: true, },
   { title: 'Legajo', key: 'employeeRecord', sortable: true },
   { title: 'Basico', key: 'basicSalary', sortable: false },
   { title: 'Total', key: 'totalSalary', sortable: false },
-  { title: 'Periodo', key:'period',  value: item => createPeriod(item.month, item.year), sortable: true },
-  { title: 'Acciones', value: 'actions', sortable: false },
+  {
+    title: 'Periodo',
+    key: 'period',
+    value: (item) => createPeriod(item.month, item.year),
+    sortable: true
+  },
+  { title: 'Acciones', value: 'actions', sortable: false }
 ]
 
 const employeeId = ref(null)
@@ -159,11 +230,10 @@ let months = [
   { value: 12, text: 'Diciembre' }
 ]
 
-const createPeriod = (month:number, year:number) => {
-  const monthName = months.find(item => item.value === month).text
+const createPeriod = (month: number, year: number) => {
+  const monthName = months.find((item) => item.value === month).text
   return `${monthName}/${year}`
 }
-
 
 const years = () => {
   let currentYear = new Date().getFullYear()
@@ -187,32 +257,26 @@ const lastYears = () => {
   return years
 }
 
-const clearForm = ()=>{
+const clearForm = () => {
   file.value = null
   month.value = null
   year.value = null
 }
 
-
-
-
 onBeforeMount(async () => {
-    const hasEmployees = await employeeStore.findAll()
+  const hasEmployees = await employeeStore.findAll()
 
-    const receipts = await employeeStore.getReceiptsList()
+  const receipts = await employeeStore.getReceiptsList()
 
-    
-    if(receipts){
-      receiptsList.value = employeeStore.receiptList
-    }
-    if(hasEmployees){
-      employeesList.value = employeeStore.employeesList
-    }
+  if (receipts) {
+    receiptsList.value = employeeStore.receiptList
+  }
+  if (hasEmployees) {
+    employeesList.value = employeeStore.employeesList
+  }
 })
 
-
 const uploadReceipts = async () => {
-
   loader.value = true
   try {
     const formData = new FormData()
@@ -231,8 +295,6 @@ const uploadReceipts = async () => {
 
     const response = await employeeStore.uploadReceipts(formData)
 
-
-
     clearForm()
   } catch (error) {
     console.log(error)
@@ -243,16 +305,12 @@ const uploadReceipts = async () => {
   console.log('Uploading receipts')
 }
 
-const viewReceipt = async (record:number, month:number, year:number, print:boolean=false) => {
-
-
-// Obtiene la URL actual
-const nuevaURL = router.resolve({
+const viewReceipt = async (record: number, month: number, year: number, print: boolean = false) => {
+  // Obtiene la URL actual
+  const nuevaURL = router.resolve({
     path: route.path.replace(/\d+$/, '456') // Cambia el ID en la URL
-  }).href;
+  }).href
 
-  window.open(`${nuevaURL}/${record}/${month}/${year}?printer=${print}`, '_blank');
+  window.open(`${nuevaURL}/${record}/${month}/${year}?printer=${print}`, '_blank')
 }
-
-
 </script>
