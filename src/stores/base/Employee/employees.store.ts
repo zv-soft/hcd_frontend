@@ -109,10 +109,10 @@ export const useEmployeeStore = defineStore('employee', {
     
     },
 
-    async findOneReceiptByID(id:number, month:string, year:string): Promise<null|EmployeeReceiptInterface>{
+    async findOneReceiptByID(id:number, month:string, year:string, category:string): Promise<null|EmployeeReceiptInterface>{
       try
       {
-        const response =  await webService.get(`${baseEndpoint}/receipt/${id}/${month}/${year}`,{
+        const response =  await webService.get(`${baseEndpoint}/receipt/${id}/${month}/${year}/${category}`,{
           headers: {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",

@@ -17,15 +17,15 @@
         </div>
         <div v-else>
 
-            <NotFoundCard v-if="!receipt" class="mt-10" entidadNombre="Recibo" />
+            <NotFoundCard v-if="!employeeReceipt" class="mt-10" entidadNombre="Recibo" />
 
             <v-row v-else class="d-flex justify-center w-100">
                 <div class="recibos-container">
                     <v-col class="recibo">
-                    <content v-if="receipt" :receipt="receipt" :logo="logo" />
+                    <content v-if="employeeReceipt" :receipt="employeeReceipt" :logo="logo" />
                     </v-col>
                     <v-col v-if="printer === 'true'" class="recibo">
-                    <content v-if="receipt" :receipt="receipt" :logo="logo" />
+                    <content v-if="employeeReceipt" :receipt="employeeReceipt" :logo="logo" />
                     </v-col>
                 </div>
             </v-row>
@@ -55,7 +55,8 @@ const employeeStore = useEmployeeStore()
 let id = ref(0)
 let month = ref('')
 let year = ref('')
-let receipt = ref({} as EmployeeReceiptInterface)
+let category = ref('')
+let employeeReceipt = ref({} as EmployeeReceiptInterface)
 
 let loader = ref(false)
 
@@ -69,16 +70,17 @@ onMounted(async () => {
     id.value = Number(route.params.id)
     month.value = route.params.month.toString()
     year.value = route.params.year.toString()
+    category.value = route.params.category.toString()
 
     loader.value = true
 
-    receipt.value = await employeeStore.findOneReceiptByID(id.value, month.value, year.value).then(res => {
+    employeeReceipt.value = await employeeStore.findOneReceiptByID(id.value, month.value, year.value, category.value).then(res => {
         console.log(res)
         loader.value = false
         return res
     })
 
-    if (receipt.value && printer && printer === "true") {
+    if (employeeReceipt.value && printer && printer === "true") {
     setTimeout(() => {
       window.print();
     }, 500); // Espera para que cargue bien el contenido

@@ -33,6 +33,7 @@
               prepend-icon="mdi-calendar"
             ></v-select>
           </v-col>
+ 
           <v-col>
             <v-combobox
               v-model="yearForView"
@@ -41,12 +42,22 @@
               variant="outlined"
             ></v-combobox>
           </v-col>
+          <v-col>
+            <v-select
+              v-model="categoryForView"
+              :items="categoriesList"
+              item-title="text"
+              item-value="value"
+              label="Categorizacion"
+              variant="outlined"
+            ></v-select>
+          </v-col>
           <v-col cols="12" md="3" class="d-flex justify-center">
             <v-btn
               color="primary"
               @click="
                 () => {
-                  viewReceipt(employeeId, monthForView, yearForView)
+                  viewReceipt(employeeId, monthForView, yearForView, categoryForView)
                 }
               "
               >Ver Recibo</v-btn
@@ -56,7 +67,7 @@
               color="primary"
               @click="
                 () => {
-                  viewReceipt(employeeId, monthForView, yearForView, true)
+                  viewReceipt(employeeId, monthForView, yearForView, categoryForView, true)
                 }
               "
               ><v-icon>mdi-printer</v-icon></v-btn
@@ -66,10 +77,11 @@
       </v-form>
     </v-card>
 
+
     <v-card class="mt-5 pa-10">
       <v-form>
         <v-row>
-          <v-col cols="12" md="3">
+          <v-col cols="12" md="2">
             <v-select
               v-model="month"
               :items="months"
@@ -80,10 +92,21 @@
               prepend-icon="mdi-calendar"
             ></v-select>
           </v-col>
-          <v-col cols="12" md="3">
+          <v-col cols="12" md="2">
             <v-combobox v-model="year" :items="years()" label="Año" variant="outlined"></v-combobox>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="3">
+            <v-select 
+            v-model="category" 
+            :items="categoriesList"               
+            item-title="text"
+            item-value="value"  
+            label="Categorizacion" 
+            variant="outlined"></v-select>
+          </v-col>
+
+         
+          <v-col cols="12" md="5">
             <v-file-input
               v-model="file"
               accept=".xlsx, .xls"
@@ -125,6 +148,14 @@
 
 
       <v-data-table :headers="headers" :items="employeeStore.receiptList"  :search="search" class="elevation-1">
+
+        <template v-slot:item.category="{ item }">
+          <v-chip color="primary">
+            {{ item.category }}
+          </v-chip>
+        </template>
+
+
         <template v-slot:item.period="{ item }">
           <v-chip color="primary">
             {{ createPeriod(item.month, item.year) }}
@@ -153,7 +184,7 @@
             color="primary"
             @click="
               () => {
-                viewReceipt(item.employeeRecord, item.month, item.year, false)
+                viewReceipt(item.employeeRecord, item.month, item.year, item.category, false)
               }
             "
             >Ver</v-btn
@@ -163,7 +194,7 @@
             color="primary"
             @click="
               () => {
-                viewReceipt(item.employeeRecord, item.month, item.year, true)
+                viewReceipt(item.employeeRecord, item.month, item.year, item.category, true)
               }
             "
             ><v-icon>mdi-printer</v-icon></v-btn
@@ -191,6 +222,7 @@ let loader = ref(false)
 const file = ref<File | null>(null)
 const month = ref('')
 const year = ref('')
+const category = ref('')
 const employeeStore = useEmployeeStore()
 const employeesList = ref([] as EmployeeInterface[])
 const search = ref('')
@@ -202,6 +234,7 @@ const headers = [
   { title: 'Legajo', key: 'employeeRecord', sortable: true },
   { title: 'Basico', key: 'basicSalary', sortable: false },
   { title: 'Total', key: 'totalSalary', sortable: false },
+  { title: 'Categorizacion', key: 'category', sortable: false },
   {
     title: 'Periodo',
     key: 'period',
@@ -214,6 +247,7 @@ const headers = [
 const employeeId = ref(null)
 const monthForView = ref(null)
 const yearForView = ref(null)
+const categoryForView = ref(null)
 
 let months = [
   { value: 1, text: 'Enero' },
@@ -228,6 +262,16 @@ let months = [
   { value: 10, text: 'Octubre' },
   { value: 11, text: 'Noviembre' },
   { value: 12, text: 'Diciembre' }
+]
+
+let categoriesList = [
+  { value: 'monthlySalary', text: 'Sueldo mensual' },
+  { value: 'sac1', text: '1 sac' },
+  { value: 'sac2', text: '2 sac' },
+  { value: 'bonusWithRetention', text: 'Bonificación con retención' },
+  { value: 'bonusWithoutRetention', text: 'Bonificación sin retención' },
+  { value: 'finalLiquidation', text: 'Liquidación final' }
+
 ]
 
 const createPeriod = (month: number, year: number) => {
@@ -261,6 +305,7 @@ const clearForm = () => {
   file.value = null
   month.value = null
   year.value = null
+  category.value = null
 }
 
 onBeforeMount(async () => {
@@ -292,6 +337,7 @@ const uploadReceipts = async () => {
     formData.append('file', file.value[0])
     formData.append('month', month.value)
     formData.append('year', year.value)
+    formData.append('category', category.value)
 
     const response = await employeeStore.uploadReceipts(formData)
 
@@ -305,12 +351,12 @@ const uploadReceipts = async () => {
   console.log('Uploading receipts')
 }
 
-const viewReceipt = async (record: number, month: number, year: number, print: boolean = false) => {
+const viewReceipt = async (record: number, month: number, year: number, category: string, print: boolean = false) => {
   // Obtiene la URL actual
   const nuevaURL = router.resolve({
     path: route.path.replace(/\d+$/, '456') // Cambia el ID en la URL
   }).href
 
-  window.open(`${nuevaURL}/${record}/${month}/${year}?printer=${print}`, '_blank')
+  window.open(`${nuevaURL}/${record}/${month}/${year}/${category}?printer=${print}`, '_blank')
 }
 </script>

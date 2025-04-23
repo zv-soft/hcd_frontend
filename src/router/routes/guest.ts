@@ -1,6 +1,6 @@
 import HomeViewVue from '@/views/HomeView.vue'
 import LoginPage from '@/views/pages/auth/login.vue'
-import ReceiptPage from '@/views/pages/guest/receipt/receipt.vue'
+import ReceiptPage from '@/views/pages/guest/receipt/employeReceipt.vue'
 
 
 export default [
@@ -21,7 +21,7 @@ export default [
   },
 
   {
-    path:'/receipts/:id/:month/:year',
+    path:'/receipts/:id/:month/:year/:category',
     name:'receipt',
     component:ReceiptPage
   }
