@@ -65,8 +65,10 @@ export interface EmployeeReceiptInterface {
   legajo: string
   basicSalary: string
   period: string
+  paymentDate: string
   bank: string
   cbu: string
+  description: string
   totalString:string
   details: ReceiptDetail[]
 }

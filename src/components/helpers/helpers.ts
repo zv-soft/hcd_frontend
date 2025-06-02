@@ -6,3 +6,8 @@ export function formatCurrency(amount: number): string {
       currency: 'ARS',
     }).format(amount);
   }
+
+
+  export function formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('es-AR', { timeZone: 'UTC' });
+}

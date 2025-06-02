@@ -14,12 +14,10 @@
             <p class="header-subtitle text-start title_text">AV. GRAL. MOSCONI Nº 183 - RINCON DE LOS SAUCES</p>
             <p class="header-subtitle text-start title_text">PROVINCIA DE NEUQUEN</p>
             <p class="header-subtitle text-start title_text">CUIT: 33-70971335-9</p>
-            <p class="header-subtitle text-start title_text">Municipalidad de Rincon de los Sauces</p>
-            <p class="header-subtitle text-start title_text">CUIT: 30-99927622-5</p>
           </v-col>
           <v-col cols="3">
             <p class="header-date text-center font-weight-black">PERIODO: {{ receipt.period }}</p>
-            <p class="header-date text-center font-weight-black">FECHA DE PAGO: 3/9/2024</p>
+            <p class="header-date text-center font-weight-black">FECHA DE PAGO:  {{ formatDate(receipt.paymentDate) }}</p>
           </v-col>
 
           <v-divider></v-divider>
@@ -134,12 +132,16 @@
               <td class="text-end title_text font-weight-black">{{ redondeo }}</td>
             </tr>
             <tr class="row-conceptos">
-              <td class="title_text">SON PESOS: {{ receipt.totalString }}</td>
-              <td class="title_text font-weight-black">TOTAL</td>
+              <td class="title_text">
+                <p>SON PESOS: {{ receipt.totalString }}</p>
+                <p v-if="receipt.description">{{ receipt.description }}</p>
+              </td>
+              <td class="title_text font-weight-black align-bottom-cell">TOTAL</td>
               <td></td>
               <td></td>
-              <td class="text-end title_text font-weight-black">${{ totalCobrar.toFixed(2) }}</td>
+              <td class="text-end title_text font-weight-black align-bottom-cell">${{ totalCobrar.toFixed(2) }}</td>
             </tr>
+           
 
           </tbody>
         </table>
@@ -173,11 +175,11 @@
 <script lang="ts" setup>
 import { EmployeeReceiptInterface, RECEIPT_ITEMS_TYPES, ReceiptDetail } from '@/stores/base/Employee/employee.interface';
 import { onMounted, ref, watch } from 'vue';
-
+import { formatDate } from '@/components/helpers/helpers';
 
 const props = defineProps<{
-  receipt: EmployeeReceiptInterface,
-  logo: string
+  receiptProps: EmployeeReceiptInterface,
+  logoProps: string
 }>()
 
 const receipt = ref( {} as EmployeeReceiptInterface)
@@ -192,10 +194,10 @@ let redondeo = ref(0)
 let totalCobrar = ref(0)
 let subTotalPositive = ref(0)
 
-watch(() => props.receipt, (value) => {
+watch(() => props.receiptProps, (value) => {
 
   receipt.value = value
-  logo.value = props.logo 
+  logo.value = props.logoProps 
 
   positive.value = receipt.value.details.filter(item => item.type === RECEIPT_ITEMS_TYPES.positive && Number(item.value) > 0) ?? {} as ReceiptDetail[]
   negative.value = receipt.value.details.filter(item => item.type === RECEIPT_ITEMS_TYPES.negative && Number(item.value) > 0) ?? {} as ReceiptDetail[]
@@ -338,5 +340,10 @@ footer {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+}
+
+/* Nueva clase para alinear en la parte inferior */
+.align-bottom-cell {
+  vertical-align: bottom;
 }
 </style>

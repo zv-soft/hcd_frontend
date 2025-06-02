@@ -22,10 +22,10 @@
             <v-row v-else class="d-flex justify-center w-100">
                 <div class="recibos-container">
                     <v-col class="recibo">
-                    <content v-if="employeeReceipt" :receipt="employeeReceipt" :logo="logo" />
+                    <content v-if="employeeReceipt" :receipt-props="employeeReceipt" :logo-props="logo" />
                     </v-col>
                     <v-col v-if="printer === 'true'" class="recibo">
-                    <content v-if="employeeReceipt" :receipt="employeeReceipt" :logo="logo" />
+                    <content v-if="employeeReceipt" :receipt-props="employeeReceipt" :logo-props="logo" />
                     </v-col>
                 </div>
             </v-row>
@@ -45,7 +45,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import logo from '@/assets/escudo_rdls.png'
 
-import content from './content.vue';
+import content from './contentReceipt.vue';
 
 import Loader from '@/components/loader.vue';
 

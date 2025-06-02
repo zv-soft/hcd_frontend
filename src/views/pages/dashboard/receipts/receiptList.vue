@@ -92,10 +92,39 @@
               prepend-icon="mdi-calendar"
             ></v-select>
           </v-col>
-          <v-col cols="12" md="2">
+          <v-col cols="12" md="1">
             <v-combobox v-model="year" :items="years()" label="Año" variant="outlined"></v-combobox>
           </v-col>
+
           <v-col cols="12" md="3">
+            <v-menu
+              v-model="datePickerMenu"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset="10"
+              min-width="auto"
+            >
+              <template v-slot:activator="{ props }">
+                <v-text-field
+                  :model-value="formattedPaymentDate"
+                  label="Fecha de pago"
+                  variant="outlined"
+                  readonly
+                  v-bind="props"
+                  prepend-icon="mdi-calendar"
+                  placeholder="Seleccione una fecha"
+                  persistent-placeholder
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="paymentDate"
+                @update:model-value="datePickerMenu = false"
+                no-title
+                scrollable
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" md="2">
             <v-select 
             v-model="category" 
             :items="categoriesList"               
@@ -105,8 +134,9 @@
             variant="outlined"></v-select>
           </v-col>
 
+
          
-          <v-col cols="12" md="5">
+          <v-col cols="12" md="3">
             <v-file-input
               v-model="file"
               accept=".xlsx, .xls"
@@ -114,6 +144,18 @@
               variant="outlined"
               prepend-icon="mdi-file"
             ></v-file-input>
+          </v-col>
+
+
+
+          <v-col cols="12">
+            <v-textarea
+              v-model="description"
+              label="Descripcion"
+              variant="outlined"
+              prepend-icon="mdi-file"
+            ></v-textarea>
+
           </v-col>
         </v-row>
         <v-row class="d-flex justify-end">
@@ -207,7 +249,7 @@
 
 <script setup lang="ts">
 //Importations
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import loaderComponent from '@/components/loader.vue'
 import { useEmployeeStore } from '@/stores/base/Employee/employees.store'
 import { EmployeeInterface, ReceiptListInterface } from '@/stores/base/Employee/employee.interface'
@@ -228,6 +270,19 @@ const employeesList = ref([] as EmployeeInterface[])
 const search = ref('')
 const receiptsList = ref([] as ReceiptListInterface[])
 const hidenAmounts = ref(true)
+const paymentDate = ref<Date | null>(null)
+const datePickerMenu = ref(false)
+const description = ref('')
+
+// Propiedad computada para formatear la fecha
+const formattedPaymentDate = computed(() => {
+  if (!paymentDate.value) return ''
+  // Formato YYYY-MM-DD. Puedes ajustarlo.
+  const year = paymentDate.value.getFullYear()
+  const month = (paymentDate.value.getMonth() + 1).toString().padStart(2, '0')
+  const day = paymentDate.value.getDate().toString().padStart(2, '0')
+  return `${year}-${month}-${day}`
+})
 
 const headers = [
   { title: 'Nombre', key: 'fullName', sortable: true, },
@@ -338,6 +393,7 @@ const uploadReceipts = async () => {
     formData.append('month', month.value)
     formData.append('year', year.value)
     formData.append('category', category.value)
+    formData.append('paymentDate', paymentDate.value.toISOString())
 
     const response = await employeeStore.uploadReceipts(formData)
 
