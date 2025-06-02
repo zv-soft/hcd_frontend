@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EmployeeReceiptInterface, RECEIPT_ITEMS_TYPES, ReceiptDetail } from '@/stores/base/Employee/employee.interface';
+import { EmployeeReceiptInterface } from '@/stores/base/Employee/employee.interface';
 import { useEmployeeStore } from '@/stores/base/Employee/employees.store';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

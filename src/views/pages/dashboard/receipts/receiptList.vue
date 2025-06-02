@@ -146,17 +146,6 @@
             ></v-file-input>
           </v-col>
 
-
-
-          <v-col cols="12">
-            <v-textarea
-              v-model="description"
-              label="Descripcion"
-              variant="outlined"
-              prepend-icon="mdi-file"
-            ></v-textarea>
-
-          </v-col>
         </v-row>
         <v-row class="d-flex justify-end">
           <v-btn color="primary" @click="uploadReceipts()">Cargar Recibos</v-btn>
@@ -272,12 +261,10 @@ const receiptsList = ref([] as ReceiptListInterface[])
 const hidenAmounts = ref(true)
 const paymentDate = ref<Date | null>(null)
 const datePickerMenu = ref(false)
-const description = ref('')
 
-// Propiedad computada para formatear la fecha
+
 const formattedPaymentDate = computed(() => {
   if (!paymentDate.value) return ''
-  // Formato YYYY-MM-DD. Puedes ajustarlo.
   const year = paymentDate.value.getFullYear()
   const month = (paymentDate.value.getMonth() + 1).toString().padStart(2, '0')
   const day = paymentDate.value.getDate().toString().padStart(2, '0')
@@ -395,7 +382,7 @@ const uploadReceipts = async () => {
     formData.append('category', category.value)
     formData.append('paymentDate', paymentDate.value.toISOString())
 
-    const response = await employeeStore.uploadReceipts(formData)
+    await employeeStore.uploadReceipts(formData)
 
     clearForm()
   } catch (error) {
