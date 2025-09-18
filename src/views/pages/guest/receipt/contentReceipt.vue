@@ -119,9 +119,9 @@
 
               <td class="cell-withe"></td>
               <td class="title_text font-weight-black">SUB-TOTAL</td>
-              <td class="text-end title_text font-weight-black">{{ subTotalPositive.toFixed(2) }}</td>
+              <td class="text-end title_text font-weight-black">{{ subTotalPositive }}</td>
               <td class="text-end title_text font-weight-black">{{ totalNegative }}</td>
-              <td class="text-end title_text font-weight-black"> {{ subTotalPositive - totalNegative }}</td>
+              <td class="text-end title_text font-weight-black"> {{ subTotalBeforeRounded }}</td>
             </tr>
             <tr class="row-conceptos">
 
@@ -190,6 +190,8 @@ let negative = ref([] as ReceiptDetail[])
 let additional = ref([] as ReceiptDetail[])
 let totalPositive = ref(0)
 let totalNegative = ref(0)
+let totalAdditional = ref(0)
+let subTotalBeforeRounded = ref(0)
 let redondeo = ref(0)
 let totalCobrar = ref(0)
 let subTotalPositive = ref(0)
@@ -205,9 +207,12 @@ watch(() => props.receiptProps, (value) => {
 
   totalPositive.value = receipt.value.details.filter(item => item.type === RECEIPT_ITEMS_TYPES.totalPositive).reduce((acc, item) => acc + Number(item.value), 0)
   totalNegative.value = receipt.value.details.filter(item => item.type === RECEIPT_ITEMS_TYPES.totalNegative).reduce((acc, item) => acc + Number(item.value), 0)
+  totalAdditional.value = receipt.value.details.filter(item => item.type === RECEIPT_ITEMS_TYPES.totalAdditional).reduce((acc, item) => acc + Number(item.value), 0)
 
   redondeo.value = Number(receipt.value.details.find(item => item.type === RECEIPT_ITEMS_TYPES.rounded)?.value ?? 0)
   totalCobrar.value = Number(receipt.value.details.find(item => item.type === RECEIPT_ITEMS_TYPES.totalCobrar)?.value ?? 0)
+
+  subTotalBeforeRounded.value = totalCobrar.value - redondeo.value 
 
   subTotal()
 })
@@ -234,7 +239,7 @@ const calculateSubTotals = (items) => {
 }
 
 const subTotal = () => {
-  subTotalPositive.value = Number((Number(calculateSubTotals(additional.value)) + Number(calculateSubTotals(positive.value))).toFixed(2))
+  subTotalPositive.value = subTotalBeforeRounded.value - totalNegative.value
 }
 
 </script>

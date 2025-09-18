@@ -106,7 +106,8 @@ export const RECEIPT_ITEMS_TYPES = {
   additional: 'adicionales',
   total: 'total',
   rounded: 'redondeo',
-  totalCobrar: 'totalCobrar',
-  totalPositive: 'totalPositivo',
-  totalNegative: 'totalNegativo',
+  totalCobrar: 'totalcobrar',
+  totalPositive: 'totalpositivo',
+  totalNegative: 'totalnegativo',
+  totalAdditional: 'totaladicionales',
 }
