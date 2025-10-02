@@ -239,7 +239,7 @@ const calculateSubTotals = (items) => {
 }
 
 const subTotal = () => {
-  subTotalPositive.value = subTotalBeforeRounded.value + totalNegative.value
+  subTotalPositive.value = Number((subTotalBeforeRounded.value + totalNegative.value).toFixed(2))
 }
 
 </script>
