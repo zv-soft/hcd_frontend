@@ -68,10 +68,13 @@
 
         <!-- DOB -->
         <v-col cols="12" md="6">
-          <v-text-field name="dob" prepend-inner-icon="mdi-calendar" placeholder="1991-01-01"
-            label="Fecha de nacimiento" class="mb-2" required :rules="validations.dobRule()" v-model="employee.dob"
-            variant="outlined">
-          </v-text-field>
+          <DatePicker
+            name="dob"
+            label="Fecha de nacimiento"
+            :required="true"
+            :rules="validations.dobRule()"
+            v-model="employee.dob"
+          />
         </v-col>
 
 
@@ -104,19 +107,24 @@
 
         <!-- Start Date -->
         <v-col cols="12" md="4">
-          <v-text-field name="startDate" prepend-inner-icon="mdi-calendar" placeholder="1991-01-01"
-            label="Fecha de ingreso" class="mb-2" required :rules="validations.dateRule('Fecha de ingreso')"
-            v-model="employee.startDate" variant="outlined">
-          </v-text-field>
+          <DatePicker
+            name="startDate"
+            label="Fecha de ingreso"
+            :required="true"
+            :rules="validations.dateRule('Fecha de ingreso')"
+            v-model="employee.startDate"
+          />
         </v-col>
 
-        <!-- Start Date -->
+        <!-- Start Date Category -->
         <v-col cols="12" md="4">
-          <v-text-field name="startDateCategory" placeholder="1991-01-01" prepend-inner-icon="mdi-calendar"
-            label="Fecha de ingreso en la categoria actual" class="mb-2" required
+          <DatePicker
+            name="startDateCategory"
+            label="Fecha de ingreso en la categoria actual"
+            :required="true"
             :rules="validations.dateRule('Fecha de ingreso en la categoria actual')"
-            v-model="employee.startDateCategory" variant="outlined">
-          </v-text-field>
+            v-model="employee.startDateCategory"
+          />
         </v-col>
 
 
@@ -201,6 +209,7 @@
 import { useUsersStore } from '@/stores/base/users';
 import LoaderComponent from '@/components/loader.vue'
 import ReturnButton from '@/components/helpers/returnButton.vue'
+import DatePicker from '@/components/DatePicker.vue'
 import { ref, onBeforeMount } from 'vue';
 
 import *  as validations from './helpers/validations';

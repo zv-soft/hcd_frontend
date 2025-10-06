@@ -5,8 +5,8 @@ import User from '@/views/pages/dashboard/users/details.vue'
 import CreateUser from '@/views/pages/dashboard/users/create.vue'
 //Employees
 import Employees from '@/views/pages/dashboard/employees/index.vue'
-import CreateEmployees from '@/views/pages/dashboard/employees/create.vue'
-import DetailAndUpdateEmployee from '@/views/pages/dashboard/employees/edit.vue'
+import CreateEmployees from '@/views/pages/dashboard/employees/CreateEmployee.vue'
+import DetailAndUpdateEmployee from '@/views/pages/dashboard/employees/EditEmployee.vue'
 //Receipts
 import Receipts from '@/views/pages/dashboard/receipts/receiptList.vue'
 

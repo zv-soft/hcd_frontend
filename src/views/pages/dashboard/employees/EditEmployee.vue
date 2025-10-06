@@ -68,10 +68,13 @@
   
           <!-- DOB -->
           <v-col cols="12" md="6">
-            <v-text-field name="dob" prepend-inner-icon="mdi-calendar" placeholder="1991/01/01"
-              label="Fecha de nacimiento" class="mb-2" required :rules="validations.dobRule()" v-model="employee.dob"
-              variant="outlined">
-            </v-text-field>
+            <DatePicker
+              name="dob"
+              label="Fecha de nacimiento"
+              :required="true"
+              :rules="validations.dobRule()"
+              v-model="employee.dob"
+            />
           </v-col>
   
   
@@ -104,19 +107,24 @@
   
           <!-- Start Date -->
           <v-col cols="12" md="4">
-            <v-text-field name="startDate" prepend-inner-icon="mdi-calendar" placeholder="1991/01/01"
-              label="Fecha de ingreso" class="mb-2" required :rules="validations.dateRule('Fecha de ingreso')"
-              v-model="employee.startDate" variant="outlined">
-            </v-text-field>
+            <DatePicker
+              name="startDate"
+              label="Fecha de ingreso"
+              :required="true"
+              :rules="validations.dateRule('Fecha de ingreso')"
+              v-model="employee.startDate"
+            />
           </v-col>
   
-          <!-- Start Date -->
+          <!-- Start Date Category -->
           <v-col cols="12" md="4">
-            <v-text-field name="startDateCategory" placeholder="1991/01/01" prepend-inner-icon="mdi-calendar"
-              label="Fecha de ingreso en la categoria actual" class="mb-2" required
+            <DatePicker
+              name="startDateCategory"
+              label="Fecha de ingreso en la categoria actual"
+              :required="true"
               :rules="validations.dateRule('Fecha de ingreso en la categoria actual')"
-              v-model="employee.startDateCategory" variant="outlined">
-            </v-text-field>
+              v-model="employee.startDateCategory"
+            />
           </v-col>
   
   
@@ -208,6 +216,7 @@
   import { useUsersStore } from '@/stores/base/users';
   import LoaderComponent from '@/components/loader.vue'
   import ReturnButton from '@/components/helpers/returnButton.vue'
+  import DatePicker from '@/components/DatePicker.vue'
   import { ref, onBeforeMount, onMounted } from 'vue';
 
   import FamilyGroup from './modals/familyGroup.vue'
@@ -234,6 +243,7 @@
   const familyGroupPopUp = ref(false)
   const ordinanceAdjustmentsPopUp = ref(false)
 
+
   const currentEmployee = ref({} as EmployeeInterface)
   
   const employee = newEmployee
@@ -246,7 +256,7 @@
   onMounted(async () => {
 
     if(router.currentRoute.value.params.id && router.currentRoute.value.params.id != undefined){
-    await getEmployee(Number(router.currentRoute.value.params.id)) 
+      await getEmployee(Number(router.currentRoute.value.params.id)) 
     }
 
     })
@@ -271,8 +281,7 @@
 
     currentEmployee.value = __employee
 
-    plant.value = __employee.category.plant.id,
-
+    plant.value = __employee.category.plant.id
 
 
     setTimeout(() => {
@@ -281,14 +290,14 @@
         category: __employee.category.id,
         studies: __employee.studies.id,
         seniority: __employee.seniority.toString(),
-        basicSalary: 150.00.toFixed(2),
-        cbu: __employee.cbu,
+        basicSalary: __employee.basicSalary
     }
     }, 1000);
 
     loader.value=false
 
   }
+
   
   async function create() {
     console.log(employee.value)
