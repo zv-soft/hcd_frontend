@@ -136,7 +136,7 @@
         <!-- Categories -->
         <v-col cols="12" md="6">
           <v-select v-model="employee.category" label="Categroia" placeholder="Seleccione Categoria" :disabled="!plant"
-            :items="plant ? configStore.getAllPlants[plant].category : []" item-title="name" item-value="id" required
+            :items="plant ? configStore.getAllPlants.find(p => p.id==plant).category : []" item-title="name" item-value="id" required
             outlined variant="outlined"></v-select>
         </v-col>
 
