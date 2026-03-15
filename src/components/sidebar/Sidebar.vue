@@ -42,6 +42,12 @@ const items = [
     path: '/receipts',
     icon: 'mdi-receipt-text'
   },
+  {
+    title: 'Digesto',
+    value: 'digesto',
+    path: '/digesto',
+    icon: 'mdi-file-document-outline'
+  },
   // {
   //   title: 'Programas',
   //   value: 'programs',

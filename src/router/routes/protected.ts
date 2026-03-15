@@ -9,6 +9,7 @@ import CreateEmployees from '@/views/pages/dashboard/employees/CreateEmployee.vu
 import DetailAndUpdateEmployee from '@/views/pages/dashboard/employees/EditEmployee.vue'
 //Receipts
 import Receipts from '@/views/pages/dashboard/receipts/receiptList.vue'
+import DigestoPage from '@/views/pages/dashboard/digesto/digestoPage.vue'
 
 
 export default{
@@ -58,6 +59,12 @@ export default{
       path:'/receipts',
       name:'receiptList',
       component:Receipts,
+    },
+
+    {
+      path:'/digesto',
+      name:'digesto',
+      component:DigestoPage,
     }
 
   ]
