@@ -312,8 +312,8 @@ let categoriesList = [
   { value: 'sac2', text: '2 sac' },
   { value: 'bonusWithRetention', text: 'Bonificación con retención' },
   { value: 'bonusWithoutRetention', text: 'Bonificación sin retención' },
-  { value: 'finalLiquidation', text: 'Liquidación final' }
-
+  { value: 'finalLiquidation', text: 'Liquidación final' },
+  { value: 'retroactive', text: 'Retroactivo' }
 ]
 
 const createPeriod = (month: number, year: number) => {
